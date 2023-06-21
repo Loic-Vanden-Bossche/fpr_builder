@@ -19,7 +19,7 @@ COPY ./build/*.js /app/
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
 
-COPY ./files* /game
+COPY files/game.zip* /game/game.zip
 COPY ./dockerfiles /dockerfiles
 
 ENV PATH $PATH:/usr/local/bin:/kaniko
