@@ -2,7 +2,7 @@ import { BuilderConfig } from "./config";
 import { ECRClient, GetAuthorizationTokenCommand } from "@aws-sdk/client-ecr";
 import { getCredentialProvider } from "./credential-provider";
 import fs from "fs";
-import { getRepositoryUrlFromConfig } from "./repository";
+import { getExecutorRepositoryUrl, getGamesRepositoryUrl } from "./repository";
 
 export const configureEcr = async (config: BuilderConfig) => {
   const ecrClient = new ECRClient({
@@ -28,15 +28,17 @@ export const configureEcr = async (config: BuilderConfig) => {
     throw new Error('No token found for ECR');
   }
 
-  const repositoryUrl = getRepositoryUrlFromConfig(config);
-
   console.log('Configuring ECR in kaniko...');
 
   fs.writeFileSync('/kaniko/.docker/config.json', JSON.stringify({
-    "auths": {
-      [repositoryUrl]: {
+    "auths": [
+      getGamesRepositoryUrl(config),
+      getExecutorRepositoryUrl(config)
+    ].reduce((acc, url) => {
+      acc[url] = {
         "auth": token,
-      }
-    }
+      };
+      return acc;
+    }, {} as Record<string, { auth: string }>)
   }));
 }

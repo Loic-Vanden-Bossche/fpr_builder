@@ -1,13 +1,14 @@
 import { BuilderConfig } from "./config";
-import { getRepositoryUrlFromConfig } from "./repository";
+import { getExecutorRepositoryUrl, getGamesRepositoryUrl } from "./repository";
 
 export const executeBuildCommand = async (config: BuilderConfig) => {
   const { $ } = await import('execa');
 
   try {
-    const imageTag = `${getRepositoryUrlFromConfig(config)}:${config.gameId}`;
+    const imageTag = `${getGamesRepositoryUrl(config)}:${config.gameId}`;
+    const executorImageTag = `${getExecutorRepositoryUrl(config)}:executor-python-latest`;
     console.log('Building image with tag:', imageTag);
-    await $`executor --dockerfile /dockerfiles/python.Dockerfile --context /game --skip-tls-verify --destination ${imageTag}`;
+    await $`executor --dockerfile /dockerfiles/python.Dockerfile --build-arg=EXECUTOR_IMAGE_NAME=${executorImageTag} --context /files --skip-tls-verify --destination ${imageTag}`;
   } catch (error) {
     console.error('An error occurred while executing the build command:', error);
   }

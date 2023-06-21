@@ -4,7 +4,8 @@ export interface BuilderConfig {
   awsSecretAccessKey?: string;
   awsAccountId: string;
   awsRegion: string;
-  ecrRepository: string;
+  ecrGamesRepository: string;
+  ecrExecutorRepository: string;
   s3Bucket: string;
 }
 
@@ -17,7 +18,8 @@ export const getConfigFromEnv = (): BuilderConfig => {
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     awsAccountId: process.env.AWS_ACCOUNT_ID!,
     awsRegion: process.env.AWS_REGION!,
-    ecrRepository: process.env.ECR_REPOSITORY!,
+    ecrGamesRepository: process.env.ECR_GAMES_REPOSITORY!,
+    ecrExecutorRepository: process.env.ECR_EXECUTOR_REPOSITORY!,
     s3Bucket: process.env.S3_BUCKET!,
   }
 }

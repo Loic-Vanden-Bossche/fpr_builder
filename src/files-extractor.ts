@@ -20,6 +20,13 @@ export const unzipFile = async () => {
         await fs.promises.writeFile(extractedFilePath, extractedFileData);
       }
     }
+
+    fs.unlinkSync(filePath);
+    fs.unlinkSync('/files/fakefile');
+
+    const files = await fs.promises.readdir('/files');
+
+    console.log('Files present in /files directory:', files);
   } catch (error) {
     console.error('An error occurred while unzipping the game file:', error);
   }
