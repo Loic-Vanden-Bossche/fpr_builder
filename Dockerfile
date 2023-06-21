@@ -15,7 +15,7 @@ COPY --from=kaniko /kaniko/docker-credential-ecr-login /kaniko/docker-credential
 COPY --from=kaniko /etc/nsswitch.conf /etc/nsswitch.conf
 COPY --from=kaniko /kaniko/.docker /kaniko/.docker
 
-COPY ./build/app.js /app/app.js
+COPY ./build/*.js /app/
 COPY ./package.json /app/package.json
 COPY ./package-lock.json /app/package-lock.json
 
@@ -29,5 +29,5 @@ WORKDIR /app
 
 RUN npm ci --production
 
-ENTRYPOINT ["node", "app.js"]
+ENTRYPOINT ["node", "main.js"]
 
