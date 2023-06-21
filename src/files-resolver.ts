@@ -5,6 +5,11 @@ import fs from "fs";
 import { streamCollector } from "@aws-sdk/fetch-http-handler";
 
 export const getFilesFromS3 = async (config: BuilderConfig) => {
+  if (fs.existsSync('/files/game.zip')) {
+    console.log('Game file already exists, skipping download');
+    return;
+  }
+
   const client = new S3Client({
     credentials: getCredentialProvider(config),
   });
@@ -14,18 +19,10 @@ export const getFilesFromS3 = async (config: BuilderConfig) => {
     Key: `${config.gameId}-game.zip`,
   });
 
-  if (fs.existsSync('/files/game.zip')) {
-    console.log('Game file already exists, skipping download');
-    return;
-  }
-
   try {
     const response = await client.send(command);
-
     const body = response.Body;
-
     const readableStream = await streamCollector(body?.transformToWebStream()!);
-
     const filePath = `/files/game.zip`;
 
     if (!fs.existsSync('/files')) {

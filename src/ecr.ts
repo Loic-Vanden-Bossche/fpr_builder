@@ -4,10 +4,12 @@ import { getCredentialProvider } from "./credential-provider";
 import fs from "fs";
 import { getRepositoryUrlFromConfig } from "./repository";
 
-export async function ConfigureEcr(config: BuilderConfig) {
+export const configureEcr = async (config: BuilderConfig) => {
   const ecrClient = new ECRClient({
     credentials: getCredentialProvider(config),
   });
+
+  console.log('Retrieving ECR token...');
 
   const res = await ecrClient.send(
     new GetAuthorizationTokenCommand({
@@ -15,7 +17,7 @@ export async function ConfigureEcr(config: BuilderConfig) {
     }),
   );
 
-  const token =  res.authorizationData?.reduce((acc, data) => {
+  const token = res.authorizationData?.reduce((acc, data) => {
     if (data?.authorizationToken) {
       return data.authorizationToken;
     }
@@ -27,6 +29,8 @@ export async function ConfigureEcr(config: BuilderConfig) {
   }
 
   const repositoryUrl = getRepositoryUrlFromConfig(config);
+
+  console.log('Configuring ECR in kaniko...');
 
   fs.writeFileSync('/kaniko/.docker/config.json', JSON.stringify({
     "auths": {
