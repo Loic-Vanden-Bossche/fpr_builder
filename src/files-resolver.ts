@@ -16,7 +16,7 @@ export const getFilesFromS3 = async (config: BuilderConfig) => {
 
   const command = new GetObjectCommand({
     Bucket: config.s3Bucket,
-    Key: `${config.gameId}-game.zip`,
+    Key: `game-${config.gameId}`,
   });
 
   try {
