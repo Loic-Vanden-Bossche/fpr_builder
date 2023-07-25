@@ -1,4 +1,5 @@
 export interface BuilderConfig {
+  language: string;
   gameId: string;
   awsAccessKeyId?: string;
   awsSecretAccessKey?: string;
@@ -13,6 +14,7 @@ export const getConfigFromEnv = (): BuilderConfig => {
   console.log('Getting config from env');
 
   return {
+    language: process.env.LANGUAGE!,
     gameId: process.env.GAME_ID!,
     awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
